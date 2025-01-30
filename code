@@ -1,0 +1,118 @@
+#include <iostream>
+#include <vector>
+#include <iomanip> // For setting price precision
+using namespace std;
+
+// Class to represent an Item in the cart
+class Item {
+public:
+    string name;
+    double price;
+    int quantity;
+
+    Item(string n, double p, int q) : name(n), price(p), quantity(q) {}
+};
+
+// Class to represent the Shopping Cart
+class ShoppingCart {
+private:
+    vector<Item> cart;
+
+public:
+    // Add an item to the cart
+    void addItem(string name, double price, int quantity) {
+        cart.push_back(Item(name, price, quantity));
+        cout << quantity << " x " << name << " added to the cart.\n";
+    }
+
+    // Remove an item from the cart
+    void removeItem(string name) {
+        for (int i = 0; i < cart.size(); i++) {
+            if (cart[i].name == name) {
+                cout << cart[i].quantity << " x " << name << " removed from the cart.\n";
+                cart.erase(cart.begin() + i);
+                return;
+            }
+        }
+        cout << "Item not found in the cart.\n";
+    }
+
+    // Display the cart contents
+    void viewCart() {
+        if (cart.empty()) {
+            cout << "Your cart is empty.\n";
+            return;
+        }
+        cout << "Items in your cart:\n";
+        cout << fixed << setprecision(2);
+        for (const auto& item : cart) {
+            cout << item.quantity << " x " << item.name << " - $" << item.price << " each\n";
+        }
+    }
+
+    // Calculate the total price of items in the cart
+    void calculateTotal() {
+        double total = 0.0;
+        for (const auto& item : cart) {
+            total += item.price * item.quantity;
+        }
+        cout << fixed << setprecision(2);
+        cout << "Total amount: $" << total << endl;
+    }
+};
+
+// Main function to interact with the cart
+int main() {
+    ShoppingCart cart;
+    int choice;
+    string name;
+    double price;
+    int quantity;
+
+    do {
+        cout << "\nShopping Cart Menu:\n";
+        cout << "1. Add item\n";
+        cout << "2. Remove item\n";
+        cout << "3. View cart\n";
+        cout << "4. Calculate total\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter item name: ";
+                cin >> name;
+                cout << "Enter item price: ";
+                cin >> price;
+                cout << "Enter item quantity: ";
+                cin >> quantity;
+                cart.addItem(name, price, quantity);
+                break;
+
+            case 2:
+                cout << "Enter item name to remove: ";
+                cin >> name;
+                cart.removeItem(name);
+                break;
+
+            case 3:
+                cart.viewCart();
+                break;
+
+            case 4:
+                cart.calculateTotal();
+                break;
+
+            case 5:
+                cout << "Exiting the program. Thank you!\n";
+                break;
+
+            default:
+                cout << "Invalid choice! Please try again.\n";
+                break;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
