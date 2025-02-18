@@ -1,0 +1,152 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+// Structure to represent a student
+struct Student {
+    string name;
+    int rollNo;
+    vector<int> marks;
+    float percentage;
+    char grade;
+};
+
+// Function to calculate the percentage and grade of the student
+void calculatePercentageAndGrade(Student &student) {
+    int total = 0;
+    for (int mark : student.marks) {
+        total += mark;
+    }
+    student.percentage = total / student.marks.size();
+    
+    // Assigning grade based on percentage
+    if (student.percentage >= 90)
+        student.grade = 'A';
+    else if (student.percentage >= 80)
+        student.grade = 'B';
+    else if (student.percentage >= 70)
+        student.grade = 'C';
+    else if (student.percentage >= 60)
+        student.grade = 'D';
+    else
+        student.grade = 'F';
+}
+
+// Function to add a new student record
+void addStudent(vector<Student> &students) {
+    Student newStudent;
+    cout << "Enter student name: ";
+    cin.ignore();
+    getline(cin, newStudent.name);
+    
+    cout << "Enter student roll number: ";
+    cin >> newStudent.rollNo;
+    
+    int numberOfSubjects, mark;
+    cout << "Enter number of subjects: ";
+    cin >> numberOfSubjects;
+    
+    for (int i = 0; i < numberOfSubjects; i++) {
+        cout << "Enter marks for subject " << i + 1 << ": ";
+        cin >> mark;
+        newStudent.marks.push_back(mark);
+    }
+    
+    // Calculate percentage and grade for the new student
+    calculatePercentageAndGrade(newStudent);
+    
+    // Add student to the list
+    students.push_back(newStudent);
+    cout << "Student record added successfully!\n";
+}
+
+// Function to display a student record by roll number
+void displayStudent(const vector<Student> &students, int rollNo) {
+    for (const auto &student : students) {
+        if (student.rollNo == rollNo) {
+            cout << "Name: " << student.name << "\n";
+            cout << "Roll Number: " << student.rollNo << "\n";
+            cout << "Marks: ";
+            for (int mark : student.marks) {
+                cout << mark << " ";
+            }
+            cout << "\nPercentage: " << student.percentage << "%\n";
+            cout << "Grade: " << student.grade << "\n";
+            return;
+        }
+    }
+    cout << "Student with roll number " << rollNo << " not found!\n";
+}
+
+// Function to display all student records
+void displayAllStudents(const vector<Student> &students) {
+    if (students.empty()) {
+        cout << "No student records found!\n";
+        return;
+    }
+    
+    for (const auto &student : students) {
+        cout << "----------------------------\n";
+        cout << "Name: " << student.name << "\n";
+        cout << "Roll Number: " << student.rollNo << "\n";
+        cout << "Percentage: " << student.percentage << "%\n";
+        cout << "Grade: " << student.grade << "\n";
+        cout << "----------------------------\n";
+    }
+}
+
+// Function to delete a student record by roll number
+void deleteStudent(vector<Student> &students, int rollNo) {
+    for (auto it = students.begin(); it != students.end(); ++it) {
+        if (it->rollNo == rollNo) {
+            students.erase(it);
+            cout << "Student with roll number " << rollNo << " deleted successfully!\n";
+            return;
+        }
+    }
+    cout << "Student with roll number " << rollNo << " not found!\n";
+}
+
+// Main menu function
+int main() {
+    vector<Student> students;
+    int choice, rollNo;
+
+    do {
+        cout << "\n=== Student Report Card System ===\n";
+        cout << "1. Add Student\n";
+        cout << "2. Display Student\n";
+        cout << "3. Display All Students\n";
+        cout << "4. Delete Student\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                addStudent(students);
+                break;
+            case 2:
+                cout << "Enter student roll number: ";
+                cin >> rollNo;
+                displayStudent(students, rollNo);
+                break;
+            case 3:
+                displayAllStudents(students);
+                break;
+            case 4:
+                cout << "Enter student roll number: ";
+                cin >> rollNo;
+                deleteStudent(students, rollNo);
+                break;
+            case 5:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid choice! Please try again.\n";
+        }
+    } while (choice != 5);
+    
+    return 0;
+}
